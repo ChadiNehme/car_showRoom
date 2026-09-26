@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import { pool } from './config/database.js'
+import { BrandRouter } from './modules/brands/brands.route.js'
 const app = express()
 
 app.use(cors())
@@ -32,7 +33,7 @@ app.get('/health/database', async (req, res) => {
         });
     }
 })
-
+app.use('/api/brands', BrandRouter)
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
