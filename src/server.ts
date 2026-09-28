@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import { pool } from './config/database.js'
 import { BrandRouter } from './modules/brands/brands.route.js'
+import { CarRouter } from './modules/cars/cars.route.js'
 const app = express()
 
 app.use(cors())
@@ -33,7 +34,12 @@ app.get('/health/database', async (req, res) => {
         });
     }
 })
+
 app.use('/api/brands', BrandRouter)
+app.use('/api/cars', CarRouter)
+
+
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
