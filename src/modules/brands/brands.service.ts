@@ -1,5 +1,5 @@
 import { pool } from '../../config/database.js'
-import type { CreateBrandInput } from './brands.types.js'
+import type { CreateBrandInput, UpdateBrandInput } from './brands.types.js'
 
 export async function createBrand(input: CreateBrandInput) {
     const result = await pool.query(
@@ -32,4 +32,43 @@ export async function getBrandById(id: number) {
         `, [id]
     )
     return result.rows[0]
+}
+
+export async function updateBrand(id: number, input: UpdateBrandInput) {
+    const fields: string[] = [];
+    const values: unknown[] = [];
+
+    if (input.name !== undefined) {
+        values.push(input.name)
+        fields.push(`name = $${values.length}`)
+    }
+    if (input.picture !== undefined) {
+        values.push(input.picture)
+        fields.push(`picture = $${values.length}`)
+    }
+    if (fields.length === 0) {
+        return undefined;
+    }
+
+    values.push(id)
+
+    const result = await pool.query(
+        `
+        UPDATE brands
+        SET ${fields.join(", ")}
+        WHERE id = $${values.length}
+        RETURNING id, name, picture, created_at
+        `,
+        values
+    );
+    return result.rows[0]
+}
+
+export async function deleteBrand(id: number) {
+    const result = await pool.query(`
+        DELETE FROM brands WHERE id=$1
+        RETURNING id, name, picture, created_at 
+        `, [id])
+    return result.rows[0]
+
 }

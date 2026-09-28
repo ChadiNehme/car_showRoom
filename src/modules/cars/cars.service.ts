@@ -1,5 +1,5 @@
 import { pool } from '../../config/database.js'
-import type { CreateCarInput } from './cars.types.js'
+import type { CreateCarInput, UpdateCarInput } from './cars.types.js'
 
 export async function createCar(input: CreateCarInput) {
     const result = await pool.query(
@@ -49,8 +49,6 @@ export async function getCarById(id: number) {
     return result.rows[0]
 
 }
-
-import type { UpdateCarInput } from "./cars.types.js";
 
 export async function updateCar(id: number, input: UpdateCarInput) {
     const fields: string[] = [];
